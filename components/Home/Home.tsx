@@ -16,6 +16,7 @@ interface IHomeProps {
 const Home: React.FC<IHomeProps> = ({ className, initialPosts }) => {
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [enteredText, setEnteredText] = useState<string>('');
+  const totalPosts = initialPosts.data.length;
 
   const handleChangeFilter = useCallback((value: string) => {
     setSelectedCategory((prev) =>
@@ -32,7 +33,16 @@ const Home: React.FC<IHomeProps> = ({ className, initialPosts }) => {
   return (
     <div className={`contents ${className}`}>
       <div className="title-wrap">
-        <h2>포스트</h2>
+        <div className="title-copy">
+          <p className="eyebrow">im-hera archive</p>
+          <div className="title-row">
+            <h2>Posts</h2>
+            <span className="post-count">{totalPosts}개의 기록</span>
+          </div>
+          <p className="description">
+            우당탕탕 개발 생활
+          </p>
+        </div>
         <div className="actions">
           <TextFilter
             onSubmit={handleSubmitTextFilter}

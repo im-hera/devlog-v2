@@ -41,3 +41,5 @@ sitemap.*.xml
 sitemap.xml
 sitemap*.xml
 .idea
+*.swp
+*.swo
