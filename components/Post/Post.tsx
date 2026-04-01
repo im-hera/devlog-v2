@@ -32,6 +32,9 @@ dayjs.locale('ko');
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then((m) => m.Code)
 );
+const Equation = dynamic(() =>
+  import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
+);
 
 const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   const { mode } = useTheme();
@@ -97,7 +100,7 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
           <NotionRenderer
             recordMap={postData.data.notionPage}
             darkMode={mode === 'dark'}
-            components={{ Code, nextLink: Link, nextImage: Image }}
+            components={{ Code, Equation, nextLink: Link, nextImage: Image }}
             mapPageUrl={linkMapper}
             mapImageUrl={customMapImageUrl}
           />

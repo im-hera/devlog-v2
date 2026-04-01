@@ -1,9 +1,8 @@
 import Post from '@components/Post';
-import { getNotionPost, getNotionPosts } from '@/lib/notion';
+import { getNotionPost } from '@/lib/notion';
 import { createApiSuccessResponse } from '@core/utils';
 import type { Metadata } from 'next';
 import type {
-  PageObjectResponse,
   RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints';
 
@@ -81,17 +80,6 @@ export async function generateMetadata({
       title: 'im-hera devlog',
       description: 'im-hera devlog'
     };
-  }
-}
-
-export async function generateStaticParams() {
-  try {
-    const posts = await getNotionPosts();
-    return posts.map((post: PageObjectResponse) => ({
-      id: getCleanId(post.id)
-    }));
-  } catch (e) {
-    return [];
   }
 }
 
