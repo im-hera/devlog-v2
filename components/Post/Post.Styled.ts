@@ -51,6 +51,12 @@ const S = styled(Post)`
 
   .post-content-wrap {
     margin-bottom: 5rem;
+
+    .notion-hr {
+      margin: 4.8rem auto;
+      border-bottom: 1px solid var(--border3);
+      opacity: 0.9;
+    }
   }
 
   .comment-container {

@@ -18,9 +18,31 @@ const S = styled(Header)`
       font-family: 'SFMono-Regular', 'JetBrains Mono', 'Fira Code', 'Menlo',
         'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
       a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
         text-decoration: none;
         color: var(--text1);
         letter-spacing: -0.15rem;
+      }
+
+      .logo-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4.2rem;
+        height: 4.2rem;
+        flex-shrink: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .logo-text {
+        line-height: 1;
       }
     }
 
@@ -61,6 +83,14 @@ const S = styled(Header)`
             line-height: 100%;
           }
         }
+      }
+    }
+  }
+
+  &.theme-dark {
+    .logo {
+      .logo-mark img {
+        filter: invert(1);
       }
     }
   }

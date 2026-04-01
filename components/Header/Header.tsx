@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -24,11 +25,21 @@ const Header: React.FC<IProps> = ({ className }) => {
   }, []);
 
   return (
-    <header id="header" className={`${className}`}>
+    <header id="header" className={`${className} theme-${mode}`}>
       <div className="header-inner">
         <div className="logo-wrap">
           <span className="logo">
-            <Link href="/">im-hera</Link>
+            <Link href="/">
+              <span className="logo-mark">
+                <Image
+                  src="/assets/images/imhera-512.png"
+                  alt="im-hera logo"
+                  width={42}
+                  height={42}
+                />
+              </span>
+              <span className="logo-text">im-hera</span>
+            </Link>
           </span>
         </div>
         <div className="actions">
