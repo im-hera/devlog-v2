@@ -11,6 +11,15 @@ function extractNotionImageId(url: string): string | null {
       return signedMatch[1];
     }
 
+    // Pattern for Notion secure S3 URLs:
+    // prod-files-secure.s3.us-west-2.amazonaws.com/{workspace_id}/{image_id}/{filename}
+    const secureS3Match = url.match(
+      /prod-files-secure\.s3\.us-west-2\.amazonaws\.com\/[a-f0-9-]+\/([a-f0-9-]+)\//i
+    );
+    if (secureS3Match && secureS3Match[1]) {
+      return secureS3Match[1];
+    }
+
     // Pattern for static URLs: secure.notion-static.com/{id}/{filename}
     const staticMatch = url.match(/secure\.notion-static\.com\/([a-f0-9-]+)\//i);
     if (staticMatch && staticMatch[1]) {
@@ -54,9 +63,14 @@ function convertToS3Url(url: string): string | null {
     return `${cdnUrl}/${imageId}.${extension}`;
   }
 
-  // Fallback to direct S3 URL
-  const bucketName = process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME || 'devlog-static';
-  const region = process.env.NEXT_PUBLIC_AWS_S3_REGION || 'ap-northeast-2';
+  // Fallback to direct S3 URL only when public bucket config exists.
+  // Otherwise keep the original Notion URL to avoid broken image URLs.
+  const bucketName = process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME;
+  const region = process.env.NEXT_PUBLIC_AWS_S3_REGION;
+  if (!bucketName || !region) {
+    return null;
+  }
+
   return `https://${bucketName}.s3.${region}.amazonaws.com/notion-images/${imageId}.${extension}`;
 }
 
@@ -74,7 +88,8 @@ export const customMapImageUrl = (url: string | undefined, _block: Block): strin
   if (
     url.includes('notion-static.com') ||
     url.includes('notion.so/image') ||
-    url.includes('file.notion.so')
+    url.includes('file.notion.so') ||
+    url.includes('prod-files-secure.s3.us-west-2.amazonaws.com')
   ) {
     const s3Url = convertToS3Url(url);
     if (s3Url) {

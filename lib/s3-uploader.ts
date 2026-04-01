@@ -121,6 +121,15 @@ export function extractNotionImageId(url: string): string | null {
       return signedMatch[1];
     }
 
+    // Pattern for Notion secure S3 URLs:
+    // prod-files-secure.s3.us-west-2.amazonaws.com/{workspace_id}/{image_id}/{filename}
+    const secureS3Match = url.match(
+      /prod-files-secure\.s3\.us-west-2\.amazonaws\.com\/[a-f0-9-]+\/([a-f0-9-]+)\//i
+    );
+    if (secureS3Match && secureS3Match[1]) {
+      return secureS3Match[1];
+    }
+
     // Pattern for static URLs: secure.notion-static.com/{id}/{filename}
     const staticMatch = url.match(/secure\.notion-static\.com\/([a-f0-9-]+)\//i);
     if (staticMatch && staticMatch[1]) {

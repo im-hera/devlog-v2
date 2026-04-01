@@ -10,6 +10,30 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'www.notion.so'
+      },
+      {
+        protocol: 'https',
+        hostname: 'notion.so'
+      },
+      {
+        protocol: 'https',
+        hostname: 'file.notion.so'
+      },
+      {
+        protocol: 'https',
+        hostname: 'secure.notion-static.com'
+      },
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'im-hera.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.im-hera.com'
       }
     ]
   },

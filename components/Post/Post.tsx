@@ -8,6 +8,7 @@ import { useGetPost } from '@core/queries/posts';
 import Comment from '@components/Comment';
 import Link from 'next/link';
 import { customMapImageUrl } from '@core/utils/notion-client/customImageMap';
+import { ErrorBoundary } from 'react-error-boundary';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
@@ -97,13 +98,22 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
       </div>
       {postData?.data.notionPage && (
         <div className="post-content-wrap">
-          <NotionRenderer
-            recordMap={postData.data.notionPage}
-            darkMode={mode === 'dark'}
-            components={{ Code, Equation, nextLink: Link, nextImage: Image }}
-            mapPageUrl={linkMapper}
-            mapImageUrl={customMapImageUrl}
-          />
+          <ErrorBoundary
+            fallback={
+              <div className="post-render-error">
+                일부 Notion 블록을 불러오는 중 문제가 발생했어요.
+              </div>
+            }
+          >
+            <NotionRenderer
+              recordMap={postData.data.notionPage}
+              darkMode={mode === 'dark'}
+              components={{ Code, Equation, nextLink: Link, nextImage: Image }}
+              mapPageUrl={linkMapper}
+              mapImageUrl={customMapImageUrl}
+              disableHeader
+            />
+          </ErrorBoundary>
         </div>
       )}
 
