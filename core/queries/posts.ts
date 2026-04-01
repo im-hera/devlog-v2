@@ -24,6 +24,10 @@ export const useGetPosts = (
   return useSuspenseQuery({
     queryKey: postsQueryKey.posts(params),
     queryFn: () => postApis.getPosts(params),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
     ...options
   });
 };

@@ -2,6 +2,7 @@ import Post from '@components/Post';
 import { getNotionPost } from '@/lib/notion';
 import { createApiSuccessResponse } from '@core/utils';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import type {
   RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints';
@@ -87,8 +88,18 @@ export default async function PostPage({ params }: PostPageProps) {
   const { id } = await params;
 
   const postId = getCleanId(id);
+  let postData;
 
-  const postData = await getNotionPost(postId);
+  try {
+    postData = await getNotionPost(postId);
+  } catch (error) {
+    if ((error as Error & { status?: number }).status === 404) {
+      notFound();
+    }
+
+    throw error;
+  }
+
   const data = createApiSuccessResponse(postData);
 
   return <Post id={postId} data={data} />;

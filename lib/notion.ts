@@ -19,6 +19,25 @@ const isProduction = process.env.NEXT_PUBLIC_APP_ENV === 'production';
 const notion = new Client({ auth });
 const notionRenderClient = new NotionAPI({ activeUser, authToken });
 
+function isStatusProperty(
+  property: PageObjectResponse['properties'][string]
+): property is Extract<PageObjectResponse['properties'][string], { type: 'status' }> {
+  return property.type === 'status';
+}
+
+export function isPublishedPost(post: PageObjectResponse): boolean {
+  const statusPropertyId = DEFINED_FILTER.STATUS_PUBLISHED.property;
+
+  const statusProperty = Object.values(post.properties).find(
+    (property) =>
+      isStatusProperty(property) &&
+      (property.id === statusPropertyId ||
+        encodeURIComponent(property.id) === statusPropertyId)
+  );
+
+  return statusProperty?.status?.name === DEFINED_FILTER.STATUS_PUBLISHED.status.equals;
+}
+
 // 포스트 목록 가져오기 (캐싱 없음 - 항상 최신 데이터)
 export async function getNotionPosts(): Promise<PageObjectResponse[]> {
   const filter: QueryDatabaseParameters['filter'] = {
@@ -52,6 +71,13 @@ async function fetchNotionPost(page_id: string): Promise<{
   const response = (await notion.pages.retrieve({
     page_id
   })) as PageObjectResponse;
+
+  if (isProduction && !isPublishedPost(response)) {
+    const error = new Error('Post is not published');
+    (error as Error & { status?: number }).status = 404;
+    throw error;
+  }
+
   const notionPage = await notionRenderClient.getPage(page_id);
 
   // Process images: download from Notion and upload to S3

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     // Revalidate by tag (Next.js 16 requires 'max' as second parameter)
     const tag = `post-${postId}`;
     revalidateTag(tag, 'max');
+    revalidatePath('/');
+    revalidatePath(`/post/${postId}`);
 
     console.log(`[Revalidate] Successfully revalidated tag: ${tag} for post ${postId}`);
 

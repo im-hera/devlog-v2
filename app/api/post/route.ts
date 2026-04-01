@@ -1,5 +1,6 @@
 import { Client } from '@notionhq/client';
 import { NotionAPI } from 'notion-client';
+import { isPublishedPost } from '@/lib/notion';
 import { createApiSuccessResponse } from '@core/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -13,6 +14,7 @@ export async function GET(request: NextRequest) {
   const auth = process.env.NOTION_API_KEY;
   const activeUser = process.env.NOTION_USER_ID;
   const authToken = process.env.NOTION_AUTH_TOKEN;
+  const isProduction = process.env.NEXT_PUBLIC_APP_ENV === 'production';
 
   if (!page_id) {
     return NextResponse.json<IAPIError>(
@@ -46,6 +48,14 @@ export async function GET(request: NextRequest) {
     const response = (await notion.pages.retrieve({
       page_id: cleanPageId
     })) as PageObjectResponse;
+
+    if (isProduction && !isPublishedPost(response)) {
+      return NextResponse.json<IAPIError>(
+        { message: '공개되지 않은 포스트입니다.' },
+        { status: 404 }
+      );
+    }
+
     const notionPage = await notionRenderClient.getPage(cleanPageId);
 
     const data = {
