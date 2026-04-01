@@ -10,12 +10,6 @@ import Link from 'next/link';
 import { customMapImageUrl } from '@core/utils/notion-client/customImageMap';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import {
-  postQueryKey,
-  useGetAdditionalInfo,
-  useUpdateLike
-} from '@core/queries/post';
-import { useIsMutating } from '@tanstack/react-query';
 
 import type { ExtendedRecordMap } from 'notion-types';
 import type {
@@ -38,7 +32,6 @@ dayjs.locale('ko');
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then((m) => m.Code)
 );
-const LikeButton = dynamic(() => import('@components/LikeButton'));
 
 const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   const { mode } = useTheme();
@@ -47,18 +40,10 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
     initialData: data
   });
 
-  const { data: additionalData } = useGetAdditionalInfo(id);
-
-  const { mutate: mutateUpdateLike } = useUpdateLike(id);
-
-  const isLikeLoading = useIsMutating({
-    mutationKey: postQueryKey.updateLike(id)
-  });
-
   const cover = postData?.data.post.cover as {
     type: 'external';
     external: {
-      url: TextRequest;
+      url: string;
     };
   };
 
@@ -82,43 +67,27 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
 
   const linkMapper = (pageId: string) => `@${pageId}`;
 
-  const handleClickLike = () => {
-    if (isLikeLoading) {
-      return;
-    }
-
-    mutateUpdateLike();
-  };
-
   return (
     <div className={`post-wrapper ${className}`}>
       <div className="article-header">
-        {cover && (
+        {cover?.external?.url && (
           <div className="cover-wrap">
             <div className="cover">
               <Image src={cover.external.url} alt="" fill />
             </div>
           </div>
         )}
-        {title && (
+        {title?.title?.[0] && (
           <div className="post-title-wrap">
             <h1>{title.title[0].plain_text}</h1>
-            {subTitle && <h2>{subTitle.rich_text[0].plain_text}</h2>}
+            {subTitle?.rich_text?.[0] && <h2>{subTitle.rich_text[0].plain_text}</h2>}
             <div className="post-options">
-              {pulishedDate && (
+              {pulishedDate?.date?.start && (
                 <p className="post-date">
-                  byseop ·{' '}
+                  im-hera ·{' '}
                   {dayjs(pulishedDate.date.start).format('YYYY년 M월 D일')}
                 </p>
               )}
-
-              <div className="post-like">
-                <LikeButton
-                  count={additionalData?.data.like.likeCount}
-                  isActive={additionalData?.data.like.isLiked}
-                  onClick={handleClickLike}
-                />
-              </div>
             </div>
           </div>
         )}

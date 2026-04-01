@@ -50,7 +50,7 @@ function convertToS3Url(url: string): string | null {
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL;
 
   if (cdnUrl) {
-    // CloudFront URL: https://static.byseop.com/{imageId}.{ext}
+    // CloudFront URL: https://static.im-hera.com/{imageId}.{ext}
     return `${cdnUrl}/${imageId}.${extension}`;
   }
 

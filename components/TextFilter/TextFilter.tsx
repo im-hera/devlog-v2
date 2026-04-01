@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { BsSearch } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
@@ -14,8 +14,12 @@ const TextFilter: React.FC<ITextFilterProps> = ({
   onSubmit,
   enteredText
 }) => {
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState<string>(enteredText || '');
   const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    setInput(enteredText || '');
+  }, [enteredText]);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -41,25 +45,27 @@ const TextFilter: React.FC<ITextFilterProps> = ({
   return (
     <div className={`text-filter-wrap ${className}`}>
       <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger asChild>
-          <button
-            className="dialog-trigger-button"
-            data-entered={enteredText && enteredText.length > 0}
-          >
-            <BsSearch />
-            {enteredText && (
-              <>
-                <span>{enteredText}</span>
-                <button
-                  className="text-filter-clearance"
-                  onClick={handleClickClear}
-                >
-                  <MdClear />
-                </button>
-              </>
-            )}
-          </button>
-        </Dialog.Trigger>
+        <div
+          className="dialog-trigger-group"
+          data-entered={Boolean(enteredText && enteredText.length > 0)}
+        >
+          <Dialog.Trigger asChild>
+            <button className="dialog-trigger-button" type="button">
+              <BsSearch />
+              {enteredText && <span>{enteredText}</span>}
+            </button>
+          </Dialog.Trigger>
+          {enteredText && (
+            <button
+              className="text-filter-clearance"
+              onClick={handleClickClear}
+              type="button"
+              aria-label="검색어 지우기"
+            >
+              <MdClear />
+            </button>
+          )}
+        </div>
         <Dialog.Portal>
           <Dialog.Overlay className={`dialog-overlay ${className}`} />
           <Dialog.Content

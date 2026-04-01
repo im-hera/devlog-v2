@@ -1,9 +1,9 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://byseop.com',
+  siteUrl: 'https://im-hera.com',
   generateRobotsTxt: true,
   exclude: ['/server-sitemap-index.xml'],
   robotsTxtOptions: {
-    additionalSitemaps: ['https://byseop.com/server-sitemap-index.xml']
+    additionalSitemaps: ['https://im-hera.com/server-sitemap-index.xml']
   }
 };

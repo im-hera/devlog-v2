@@ -1,31 +1,31 @@
 import type { DefaultSeoProps } from 'next-seo';
 
 const config: DefaultSeoProps = {
-  title: 'byseop devlog',
+  title: 'hera devlog',
   description:
-    '프론트엔드 개발자 byseop 개발블로그 입니다. 세상에서 가장 빠르게 최신 개발 트렌드를 확인해보세요.',
+    '백엔드 개발자 문혜라의 개발 블로그 입니다. 제 공간에 와주셔서 감사합니다.',
   openGraph: {
-    title: 'byseop devlog',
+    title: 'hera devlog',
     description:
-      '프론트엔드 개발자 byseop 개발블로그 입니다. 세상에서 가장 빠르게 최신 개발 트렌드를 확인해보세요.',
+      '백엔드 개발자 문혜라의 개발 블로그 입니다. 제 공간에 와주셔서 감사합니다.',
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://byseop.com',
-    siteName: 'byseop devlog',
+    url: 'https://im-hera.com',
+    siteName: 'hera devlog',
     images: [
       {
-        url: 'https://byseop.com/assets/images/byseop.png',
+        url: 'https://im-hera.com/assets/images/hera.png',
         width: 1074,
         height: 674,
-        alt: 'byseop devlog',
-        secureUrl: 'https://byseop.com/assets/images/byseop.png',
+        alt: 'hera devlog',
+        secureUrl: 'https://im-hera.com/assets/images/hera.png',
         type: 'image/png'
       }
     ]
   },
   twitter: {
-    handle: 'byseop',
-    site: 'https://byseop.com',
+    handle: 'hera',
+    site: 'https://im-hera.com',
     cardType: 'summary_large_image'
   }
 };

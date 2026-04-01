@@ -6,7 +6,7 @@ export async function GET() {
     const posts = await getNotionPosts();
 
     return getServerSideSitemapIndex(
-      posts.map((page) => `https://byseop.com/post/@${page.id}`)
+      posts.map((page) => `https://im-hera.com/post/@${page.id}`)
     );
   } catch (e) {
     console.error(e);

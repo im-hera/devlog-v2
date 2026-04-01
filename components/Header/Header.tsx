@@ -52,12 +52,12 @@ const Header: React.FC<IProps> = ({ className }) => {
       <div className="header-inner">
         <div className="logo-wrap">
           <span className={`logo ${firaMono.className}`}>
-            <Link href="/">byseop</Link>
+            <Link href="/">im-hera</Link>
           </span>
         </div>
         <div className="actions">
           <div className="btn-wrap">
-            <a href="https://github.com/byseop" target="_blank">
+            <a href="https://github.com/im-hera" target="_blank">
               <span>
                 <BsGithub />
               </span>

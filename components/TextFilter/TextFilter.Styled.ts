@@ -4,14 +4,10 @@ import styled from 'styled-components';
 import TextFilter from './TextFilter';
 
 const S = styled(TextFilter)`
-  .dialog-trigger-button {
+  .dialog-trigger-group {
     display: flex;
     width: 40px;
     height: 40px;
-    background: none;
-    font-size: 2rem;
-    color: var(--text1);
-    border: none;
     margin: 0;
     padding: 0;
     position: relative;
@@ -23,13 +19,7 @@ const S = styled(TextFilter)`
     align-items: center;
     justify-content: center;
     gap: 5px;
-
-    /* svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    } */
+    background: none;
 
     &:hover {
       opacity: 1;
@@ -40,19 +30,24 @@ const S = styled(TextFilter)`
       width: auto;
       padding: 0 1rem;
     }
+  }
 
-    .text-filter-clearance {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-      padding: 0;
-      margin: 0;
-      cursor: pointer;
-      width: 16px;
-      height: 16px;
-      color: var(--text2);
+  .dialog-trigger-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    font-size: 2rem;
+    color: var(--text1);
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+
+    svg {
+      flex-shrink: 0;
     }
 
     span {
@@ -62,6 +57,21 @@ const S = styled(TextFilter)`
       overflow: hidden;
       max-width: 300px;
     }
+  }
+
+  .text-filter-clearance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    color: var(--text2);
+    flex-shrink: 0;
   }
 
   &.dialog-overlay {

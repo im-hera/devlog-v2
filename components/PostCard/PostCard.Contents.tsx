@@ -7,6 +7,19 @@ import type {
 } from '@notionhq/client/build/src/api-endpoints';
 import Link from 'next/link';
 
+const notionColorMap: Record<string, string> = {
+  default: '#e3e2e0',
+  gray: '#e3e2e0',
+  brown: '#eee0da',
+  orange: '#fadec9',
+  yellow: '#fdecc8',
+  green: '#dbeddb',
+  blue: '#d3e5ef',
+  purple: '#e8deee',
+  pink: '#f5e0e9',
+  red: '#ffe2dd'
+};
+
 interface IPostCardProps {
   className?: string;
   data: PageObjectResponse;
@@ -43,24 +56,24 @@ const PostCard: React.FC<IPostCardProps> = ({ data, className, lastRef }) => {
       <div className={`${className} post-card`} ref={lastRef}>
         {data.cover && <CoverImage cover={data.cover} />}
         <div className="card-contents">
-          {categories && (
+          {categories?.multi_select?.length > 0 && (
             <div className="categories">
               {categories.multi_select.map((category) => (
                 <span
                   key={category.id}
-                  style={{ backgroundColor: category.color }}
+                  style={{ backgroundColor: notionColorMap[category.color] || notionColorMap.default }}
                 >
                   {category.name}
                 </span>
               ))}
             </div>
           )}
-          {title && (
+          {title?.title?.[0] && (
             <div className="title">
               <p>{title.title[0].plain_text}</p>
             </div>
           )}
-          {subTitle && (
+          {subTitle?.rich_text?.[0] && (
             <div className="sub-title">
               <p>{subTitle.rich_text[0].plain_text}</p>
             </div>

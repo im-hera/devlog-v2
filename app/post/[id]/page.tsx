@@ -44,16 +44,16 @@ export async function generateMetadata({
       id: string;
     };
 
-    const titleText = title?.title[0]?.plain_text || 'byseop devlog';
+    const titleText = title?.title[0]?.plain_text || 'im-hera devlog';
     const descriptionText =
-      subTitle?.rich_text[0]?.plain_text || 'byseop devlog';
+      subTitle?.rich_text[0]?.plain_text || 'im-hera devlog';
     const imageUrl = cover?.external?.url;
 
     return {
       title: titleText,
       description: descriptionText,
       openGraph: {
-        url: `https://byseop.com/post/${id}`,
+        url: `https://im-hera.com/post/${id}`,
         title: titleText,
         description: descriptionText,
         images: imageUrl
@@ -68,18 +68,18 @@ export async function generateMetadata({
               }
             ]
           : undefined,
-        siteName: 'byseop devlog'
+        siteName: 'im-hera devlog'
       },
       twitter: {
         card: 'summary_large_image',
-        site: `https://byseop.com/post/${id}`,
-        creator: 'byseop'
+        site: `https://im-hera.com/post/${id}`,
+        creator: 'im-hera'
       }
     };
   } catch (e) {
     return {
-      title: 'byseop devlog',
-      description: 'byseop devlog'
+      title: 'im-hera devlog',
+      description: 'im-hera devlog'
     };
   }
 }

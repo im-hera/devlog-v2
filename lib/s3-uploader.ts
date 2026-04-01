@@ -96,7 +96,7 @@ export async function uploadImageToS3(
 export function getS3Url(imageId: string): string {
   const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL;
   if (cdnUrl) {
-    // CloudFront URL: https://static.byseop.com/{imageId}
+    // CloudFront URL: https://static.im-hera.com/{imageId}
     return `${cdnUrl}/${imageId}`;
   }
 

@@ -18,7 +18,7 @@ const Comment = () => {
     const script = document.createElement('script');
     script.src = 'https://utteranc.es/client.js';
     script.async = true;
-    script.setAttribute('repo', 'byseop/devlog-v2');
+    script.setAttribute('repo', 'im-hera/devlog-v2');
     script.setAttribute('issue-term', 'title');
     script.setAttribute('label', 'comment');
     script.setAttribute('theme', `github-${mode}`);

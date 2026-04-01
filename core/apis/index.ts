@@ -2,7 +2,7 @@ import type { Response } from '@interfaces/index';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_APP_ENV === 'production'
-    ? 'https://byseop.com/api'
+    ? 'https://im-hera.com/api'
     : 'http://localhost:3000/api';
 
 const DEFAULT_TIMEOUT = 10000;
