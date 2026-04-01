@@ -6,6 +6,7 @@ import { createApiSuccessResponse } from '@core/utils';
 export default async function HomePage() {
   noStore();
 
+  // Keep the home feed fresh from Notion on every request.
   const posts = await getNotionPosts();
   const data = createApiSuccessResponse(posts);
 
