@@ -15,6 +15,8 @@ const S = styled(Header)`
 
     .logo {
       font-size: 3rem;
+      font-family: 'SFMono-Regular', 'JetBrains Mono', 'Fira Code', 'Menlo',
+        'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
       a {
         text-decoration: none;
         color: var(--text1);
