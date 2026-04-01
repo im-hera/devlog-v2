@@ -27,13 +27,21 @@ function isStatusProperty(
 
 export function isPublishedPost(post: PageObjectResponse): boolean {
   const statusPropertyId = DEFINED_FILTER.STATUS_PUBLISHED.property;
+  let statusProperty: Extract<
+    PageObjectResponse['properties'][string],
+    { type: 'status' }
+  > | null = null;
 
-  const statusProperty = Object.values(post.properties).find(
-    (property) =>
+  for (const property of Object.values(post.properties)) {
+    if (
       isStatusProperty(property) &&
       (property.id === statusPropertyId ||
         encodeURIComponent(property.id) === statusPropertyId)
-  );
+    ) {
+      statusProperty = property;
+      break;
+    }
+  }
 
   return statusProperty?.status?.name === DEFINED_FILTER.STATUS_PUBLISHED.status.equals;
 }
