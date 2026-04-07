@@ -2,7 +2,6 @@ import { Client } from '@notionhq/client';
 import { NotionAPI } from 'notion-client';
 import { DEFINED_FILTER } from '@core/constants';
 import { processPostImages } from './process-post-images';
-import { unstable_cache } from 'next/cache';
 
 import type {
   PageObjectResponse,
@@ -103,13 +102,4 @@ async function fetchNotionPost(page_id: string): Promise<{
   };
 }
 
-// 캐시와 태그가 적용된 함수
-export const getNotionPost = (page_id: string) =>
-  unstable_cache(
-    () => fetchNotionPost(page_id),
-    [`notion-post-${page_id}`],
-    {
-      tags: [`post-${page_id}`],
-      revalidate: 31536000 // 1년
-    }
-  )();
+export const getNotionPost = async (page_id: string) => fetchNotionPost(page_id);

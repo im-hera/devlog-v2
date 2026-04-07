@@ -7,9 +7,7 @@ import type {
   RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints';
 
-// Cache for 1 year (31536000 seconds)
-// Use on-demand revalidation via /api/revalidate to update when needed
-export const revalidate = 31536000;
+export const dynamic = 'force-dynamic';
 
 interface PostPageProps {
   params: Promise<{ id: string }>;
