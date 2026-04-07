@@ -36,66 +36,7 @@ const Code = dynamic(() =>
 const Equation = dynamic(() =>
   import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
 );
-
-function sanitizeRecordMap(recordMap: ExtendedRecordMap): ExtendedRecordMap {
-  const getBlockValue = (blockValue: ExtendedRecordMap['block'][string]) => {
-    const outerValue = blockValue?.value as
-      | ({
-          value?: ExtendedRecordMap['block'][string]['value'];
-        } & ExtendedRecordMap['block'][string]['value'])
-      | undefined;
-
-    return (outerValue?.value ?? outerValue) as
-      | (ExtendedRecordMap['block'][string]['value'] & {
-          type?: string;
-          parent_id?: string;
-          parent_table?: string;
-        })
-      | undefined;
-  };
-
-  const collectionBlockIds = new Set(
-    Object.entries(recordMap.block ?? {})
-      .filter(([, blockValue]) => {
-        const block = getBlockValue(blockValue);
-
-        if (!block) {
-          return false;
-        }
-
-        return (
-          block.type === 'collection_view' ||
-          block.type === 'collection_view_page' ||
-          block.parent_table === 'collection'
-        );
-      })
-      .map(([blockId]) => blockId)
-  );
-
-  const sanitizedBlocks = Object.fromEntries(
-    Object.entries(recordMap.block ?? {}).filter(([blockId, blockValue]) => {
-      const block = getBlockValue(blockValue);
-
-      if (!block) {
-        return true;
-      }
-
-      return (
-        !collectionBlockIds.has(blockId) &&
-        !collectionBlockIds.has(block.parent_id ?? '')
-      );
-    })
-  );
-
-  return {
-    ...recordMap,
-    block: sanitizedBlocks,
-    collection: {},
-    collection_view: {},
-    collection_query: {},
-    signed_urls: {}
-  };
-}
+const Collection = () => null;
 
 function PostRenderFallback({
   error
@@ -143,9 +84,6 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   };
 
   const linkMapper = (pageId: string) => `@${pageId}`;
-  const sanitizedRecordMap = postData?.data.notionPage
-    ? sanitizeRecordMap(postData.data.notionPage)
-    : undefined;
 
   return (
     <div className={`post-wrapper ${className}`}>
@@ -172,7 +110,7 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
           </div>
         )}
       </div>
-      {sanitizedRecordMap && (
+      {postData?.data.notionPage && (
         <div className="post-content-wrap">
           <ErrorBoundary
             FallbackComponent={PostRenderFallback}
@@ -181,9 +119,15 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
             }}
           >
             <NotionRenderer
-              recordMap={sanitizedRecordMap}
+              recordMap={postData.data.notionPage}
               darkMode={mode === 'dark'}
-              components={{ Code, Equation, nextLink: Link, nextImage: Image }}
+              components={{
+                Code,
+                Equation,
+                Collection,
+                nextLink: Link,
+                nextImage: Image
+              }}
               mapPageUrl={linkMapper}
               mapImageUrl={customMapImageUrl}
               disableHeader
