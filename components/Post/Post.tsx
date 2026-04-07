@@ -38,14 +38,21 @@ const Equation = dynamic(() =>
 );
 
 function sanitizeRecordMap(recordMap: ExtendedRecordMap): ExtendedRecordMap {
-  const getBlockValue = (blockValue: ExtendedRecordMap['block'][string]) =>
-    (blockValue?.value?.value ?? blockValue?.value) as
+  const getBlockValue = (blockValue: ExtendedRecordMap['block'][string]) => {
+    const outerValue = blockValue?.value as
+      | ({
+          value?: ExtendedRecordMap['block'][string]['value'];
+        } & ExtendedRecordMap['block'][string]['value'])
+      | undefined;
+
+    return (outerValue?.value ?? outerValue) as
       | (ExtendedRecordMap['block'][string]['value'] & {
           type?: string;
           parent_id?: string;
           parent_table?: string;
         })
       | undefined;
+  };
 
   const collectionBlockIds = new Set(
     Object.entries(recordMap.block ?? {})
