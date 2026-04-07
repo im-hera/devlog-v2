@@ -38,6 +38,56 @@ const Equation = dynamic(() =>
 );
 const Collection = () => null;
 
+function normalizeRootPageRecordMap(
+  recordMap: ExtendedRecordMap,
+  pageId: string
+): ExtendedRecordMap {
+  const rootBlockEntry = recordMap.block?.[pageId];
+
+  if (!rootBlockEntry?.value) {
+    return recordMap;
+  }
+
+  const outerValue = rootBlockEntry.value as unknown as
+    | ({
+        value?: Record<string, unknown>;
+      } & Record<string, unknown>)
+    | undefined;
+
+  if (!outerValue) {
+    return recordMap;
+  }
+
+  const innerValue =
+    typeof outerValue.value === 'object' && outerValue.value !== null
+      ? outerValue.value
+      : undefined;
+
+  const nextOuterValue = innerValue
+    ? {
+        ...outerValue,
+        value: {
+          ...innerValue,
+          parent_table: 'block'
+        }
+      }
+    : {
+        ...outerValue,
+        parent_table: 'block'
+      };
+
+  return {
+    ...recordMap,
+    block: {
+      ...recordMap.block,
+      [pageId]: {
+        ...rootBlockEntry,
+        value: nextOuterValue as typeof rootBlockEntry.value
+      }
+    }
+  };
+}
+
 function PostRenderFallback({
   error
 }: {
@@ -84,6 +134,9 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   };
 
   const linkMapper = (pageId: string) => `@${pageId}`;
+  const normalizedRecordMap = postData?.data.notionPage
+    ? normalizeRootPageRecordMap(postData.data.notionPage, id)
+    : undefined;
 
   return (
     <div className={`post-wrapper ${className}`}>
@@ -110,7 +163,7 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
           </div>
         )}
       </div>
-      {postData?.data.notionPage && (
+      {normalizedRecordMap && (
         <div className="post-content-wrap">
           <ErrorBoundary
             FallbackComponent={PostRenderFallback}
@@ -119,7 +172,7 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
             }}
           >
             <NotionRenderer
-              recordMap={postData.data.notionPage}
+              recordMap={normalizedRecordMap}
               darkMode={mode === 'dark'}
               components={{
                 Code,
