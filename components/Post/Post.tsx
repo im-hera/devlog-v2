@@ -38,24 +38,46 @@ const Equation = dynamic(() =>
 );
 
 function sanitizeRecordMap(recordMap: ExtendedRecordMap): ExtendedRecordMap {
+  const collectionBlockIds = new Set(
+    Object.entries(recordMap.block ?? {})
+      .filter(([, blockValue]) => {
+        const block = blockValue?.value;
+
+        if (!block) {
+          return false;
+        }
+
+        return (
+          block.type === 'collection_view' ||
+          block.type === 'collection_view_page' ||
+          block.parent_table === 'collection'
+        );
+      })
+      .map(([blockId]) => blockId)
+  );
+
   const sanitizedBlocks = Object.fromEntries(
-    Object.entries(recordMap.block ?? {}).filter(([, blockValue]) => {
+    Object.entries(recordMap.block ?? {}).filter(([blockId, blockValue]) => {
       const block = blockValue?.value;
 
       if (!block) {
         return true;
       }
 
-      return ![
-        'collection_view',
-        'collection_view_page'
-      ].includes(block.type);
+      return (
+        !collectionBlockIds.has(blockId) &&
+        !collectionBlockIds.has(block.parent_id ?? '')
+      );
     })
   );
 
   return {
     ...recordMap,
-    block: sanitizedBlocks
+    block: sanitizedBlocks,
+    collection: {},
+    collection_view: {},
+    collection_query: {},
+    signed_urls: {}
   };
 }
 
