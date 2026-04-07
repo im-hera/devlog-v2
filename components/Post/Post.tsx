@@ -37,6 +37,41 @@ const Equation = dynamic(() =>
   import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
 );
 
+function sanitizeRecordMap(recordMap: ExtendedRecordMap): ExtendedRecordMap {
+  const sanitizedBlocks = Object.fromEntries(
+    Object.entries(recordMap.block ?? {}).filter(([, blockValue]) => {
+      const block = blockValue?.value;
+
+      if (!block) {
+        return true;
+      }
+
+      return ![
+        'collection_view',
+        'collection_view_page'
+      ].includes(block.type);
+    })
+  );
+
+  return {
+    ...recordMap,
+    block: sanitizedBlocks
+  };
+}
+
+function PostRenderFallback({
+  error
+}: {
+  error: Error;
+}) {
+  return (
+    <div className="post-render-error" role="alert">
+      <p>본문을 렌더링하는 중 문제가 발생했어요.</p>
+      <pre>{error.message}</pre>
+    </div>
+  );
+}
+
 const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   const { mode } = useTheme();
 
@@ -70,6 +105,9 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
   };
 
   const linkMapper = (pageId: string) => `@${pageId}`;
+  const sanitizedRecordMap = postData?.data.notionPage
+    ? sanitizeRecordMap(postData.data.notionPage)
+    : undefined;
 
   return (
     <div className={`post-wrapper ${className}`}>
@@ -96,17 +134,16 @@ const Post: React.FC<IPostProps> = ({ id, data, className }) => {
           </div>
         )}
       </div>
-      {postData?.data.notionPage && (
+      {sanitizedRecordMap && (
         <div className="post-content-wrap">
           <ErrorBoundary
-            fallback={
-              <div className="post-render-error">
-                일부 Notion 블록을 불러오는 중 문제가 발생했어요.
-              </div>
-            }
+            FallbackComponent={PostRenderFallback}
+            onError={(error) => {
+              console.error('[Post] NotionRenderer crashed:', error);
+            }}
           >
             <NotionRenderer
-              recordMap={postData.data.notionPage}
+              recordMap={sanitizedRecordMap}
               darkMode={mode === 'dark'}
               components={{ Code, Equation, nextLink: Link, nextImage: Image }}
               mapPageUrl={linkMapper}
